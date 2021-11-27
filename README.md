@@ -1,5 +1,4 @@
-# quiz
-Quiz Application
+# Quiz Application
 User can be able to login using google.
 Quiz have multiple Topics – Sports, Science & Technology, Arts, Politics, etc..
 Each subject would have 3 levels (Beginner, Intermediate, Professional)
