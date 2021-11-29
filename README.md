@@ -9,3 +9,5 @@ One question is visible each time and each question would have 4 Multiple choice
 After the quiz is complete the score will be displayed to the user.
 # Admin Side
 The admin can view and manage the users, their rankings, and manage the quiz topics and questions.
+# About System
+This Quiz Application is in PHP, CSS, JavaScript, Bootstrap and Vue JS. Talking about the features of the Quiz Application, it just contains both the admin section and the user section. The user can log in using Google Account to take the quiz, while the admin can view all users, their rankings and manage topics and questions. The design of this project is pretty simple so that the user won’t find any difficulties while working on it.
