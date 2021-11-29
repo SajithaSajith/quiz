@@ -46,3 +46,8 @@ Note: User can restart the quiz topic which he already attended.
 Note: For admin panel, go to URL ” http://localhost/quiz/admin.php” and login with email id 'admin@example.com' and password 'admin'
 
 Note: Vue JS framework is used in dashboard.php for the form validation of Quiz Topic and Questions. 
+
+# Refernces
+1. https://www.youtube.com/watch?v=hazMyK_cnzk - Login With Google Account Using PHP & Client API & Bootstrap Design
+2. https://code-projects.org/online-quiz-system-in-php-with-source-code/ - Reference for quiz application code and database
+3.https://www.digitalocean.com/community/tutorials/template-driven-form-validation-in-vuejs - Reference for the Vue JS form validation
