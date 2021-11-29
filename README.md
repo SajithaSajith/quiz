@@ -36,3 +36,5 @@ After Creating Database,
 9th Step: Open a browser and go to URL “http://localhost/quiz/”
 
 Note: For admin panel, go to URL ” http://localhost/quiz/admin.php” and login with email id 'admin@example.com' and password 'admin'
+
+Note: Vue JS framework is used in dashboard.php for the form validation of Quiz Topic and Questions. 
