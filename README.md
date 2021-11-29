@@ -14,17 +14,35 @@ This Quiz Application is in PHP, CSS, JavaScript, Bootstrap and Vue JS. Talking 
 # How To Run The Project?
 To run this project, you must have installed a virtual server eg. XAMPP on your PC (for Windows).
 After Starting Apache and MySQL in XAMPP/WAMP, follow the following steps.
+
 1st Step: Download ZIP file and Extract files.
+
 2nd Step: Copy the main project folder
+
 3rd Step: Paste in root folder. eg. xampp/htdocs/
+
 4th Step: Open a browser and go to URL “http://localhost/phpmyadmin/”
+
 5th Step: Then, click on the databases tab
+
 6th Step: Create a database naming “exam” and then click on the import tab
+
 7th Step: Click on browse file and select “exam.sql” file which is inside the “quiz” folder
+
 8th Step: Click on go.
 
-After Creating Database,
+You can notice 'admin','answer', 'history', 'options', 'questions', 'quiz' tables in the database.
+'admin' - table used for admin login details
+'quiz' - table used for saving the quiz topics with details
+'questions' - table used for saving questions of all topics with related details
+'options' - table used for saving the options for questions
+'answer' - table used for saving the answer of the question
+'history' - table used for calculating the score of the quiz for a perticular user
 
 9th Step: Open a browser and go to URL “http://localhost/quiz/”
 
-Note: For admin panel, go to URL ” http://localhost/quiz/admin.php”
+Note: User can restart the quiz topic which he already attended.
+
+Note: For admin panel, go to URL ” http://localhost/quiz/admin.php” and login with email id 'admin@example.com' and password 'admin'
+
+Note: Vue JS framework is used in dashboard.php for the form validation of Quiz Topic and Questions. 
