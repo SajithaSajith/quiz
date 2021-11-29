@@ -1,23 +1,25 @@
 <?php
+//update.php is used update database tables according to different actions dashboard.php in the back end
   include_once 'database.php';
   session_start();
   $email=$_SESSION['email'];
-
+/*
   if(isset($_SESSION['key']))
   {
     if(@$_GET['demail'] && $_SESSION['key']=='admin') 
     {
       $demail=@$_GET['demail'];
-      $r1 = mysqli_query($con,"DELETE FROM rank WHERE email='$demail' ") or die('Error');
+      //$r1 = mysqli_query($con,"DELETE FROM rank WHERE email='$demail' ") or die('Error');
       $r2 = mysqli_query($con,"DELETE FROM history WHERE email='$demail' ") or die('Error');
       $result = mysqli_query($con,"DELETE FROM user WHERE email='$demail' ") or die('Error');
       header("location:dashboard.php?q=1");
     }
-  }
+  }*/
 
   if(isset($_SESSION['key']))
   {
-    if(@$_GET['q']== 'rmquiz' && $_SESSION['key']=='admin') 
+    // Removing Quiz Topic, associated questions, options, answer and history(If any user already attended the topic) and redirecting to dashboard.php
+	if(@$_GET['q']== 'rmquiz' && $_SESSION['key']=='admin') 
     {
       $eid=@$_GET['eid'];
       $result = mysqli_query($con,"SELECT * FROM questions WHERE eid='$eid' ") or die('Error');
@@ -36,6 +38,7 @@
 
   if(isset($_SESSION['key']))
   {
+	// Inserting Quiz Topics into the quiz table 
     if(@$_GET['q']== 'addquiz' && $_SESSION['key']=='admin') 
     {
       $name = $_POST['name'];
@@ -51,6 +54,7 @@
 
   if(isset($_SESSION['key']))
   {
+	// Inserting Quiz Questions into the 'questions' table, inserting options into the 'options' table and answer into the 'answer' table
     if(@$_GET['q']== 'addqns' && $_SESSION['key']=='admin') 
     {
       $n=@$_GET['n'];
@@ -59,16 +63,16 @@
       for($i=1;$i<=$n;$i++)
       {
         $qid=uniqid();
-        $qns=$_POST['question'.$i];
+        $qns=addslashes($_POST['question'.$i]);
 		$q3=mysqli_query($con,"INSERT INTO questions VALUES  ('$eid','$qid','$qns','$i','$ch','$i')");
         $oaid=uniqid();
         $obid=uniqid();
         $ocid=uniqid();
         $odid=uniqid();
-        $a=$_POST['optiona'.$i.'1'];
-        $b=$_POST['optionb'.$i.'2'];
-        $c=$_POST['optionc'.$i.'3'];
-        $d=$_POST['optiond'.$i.'4'];
+        $a=addslashes($_POST['optiona'.$i.'1']);
+        $b=addslashes($_POST['optionb'.$i.'2']);
+        $c=addslashes($_POST['optionc'.$i.'3']);
+        $d=addslashes($_POST['optiond'.$i.'4']);
         $qa=mysqli_query($con,"INSERT INTO options VALUES  ('$qid','$a','$oaid')") or die('Error61');
         $qb=mysqli_query($con,"INSERT INTO options VALUES  ('$qid','$b','$obid')") or die('Error62');
         $qc=mysqli_query($con,"INSERT INTO options VALUES  ('$qid','$c','$ocid')") or die('Error63');
@@ -88,7 +92,8 @@
 	  header("location:dashboard.php?q=0");
     }
   }
-
+  
+  //updating related table after submitting each question's answer
   if(@$_GET['q']== 'quiz' && @$_GET['step']== 2) 
   {
     $eid=@$_GET['eid'];
@@ -96,20 +101,25 @@
     $total=@$_GET['t'];
     $ans=$_POST['ans'];
     $qid=@$_GET['qid'];
+	//getting the correct answer of the question
     $q=mysqli_query($con,"SELECT * FROM answer WHERE qid='$qid' " );
     while($row=mysqli_fetch_array($q) )
     {  $ansid=$row['ansid']; }
+	//if answer is correct
     if($ans == $ansid)
     {
-      $q=mysqli_query($con,"SELECT * FROM quiz WHERE eid='$eid' " );
+      //getting the details of the topic where the question belongs to
+	  $q=mysqli_query($con,"SELECT * FROM quiz WHERE eid='$eid' " );
       while($row=mysqli_fetch_array($q) )
       {
-        $sahi=$row['sahi'];
+        $sahi=$row['sahi']; // mark for each question
       }
       if($sn == 1)
       {
-        $q=mysqli_query($con,"INSERT INTO history VALUES('$email','$eid' ,'0','0','0','0',NOW())")or die('Error');
+        //Inserting into history table when the first question answered
+		$q=mysqli_query($con,"INSERT INTO history VALUES('$email','$eid' ,'0','0','0','0',NOW())")or die('Error');
       }
+	  //updating score in the history table when each question is answered correctly
       $q=mysqli_query($con,"SELECT * FROM history WHERE eid='$eid' AND email='$email' ")or die('Error115');
       while($row=mysqli_fetch_array($q) )
       {
@@ -118,10 +128,12 @@
       }
       $r++;
       $s=$s+$sahi;
+	  //updating score in the history table when each question is answered correctly
       $q=mysqli_query($con,"UPDATE `history` SET `score`=$s,`level`=$sn,`sahi`=$r, date= NOW()  WHERE  email = '$email' AND eid = '$eid'")or die('Error124');
     } 
     else
     {
+	  //if answer isn't correct	
       $q=mysqli_query($con,"SELECT * FROM quiz WHERE eid='$eid' " )or die('Error129');
       while($row=mysqli_fetch_array($q) )
       {
@@ -129,8 +141,10 @@
       }
       if($sn == 1)
       {
-        $q=mysqli_query($con,"INSERT INTO history VALUES('$email','$eid' ,'0','0','0','0',NOW() )")or die('Error137');
+        //Inserting into history table when the first question answered
+		$q=mysqli_query($con,"INSERT INTO history VALUES('$email','$eid' ,'0','0','0','0',NOW() )")or die('Error137');
       }
+	  //updating score in the history table when each question is answered incorrectly
       $q=mysqli_query($con,"SELECT * FROM history WHERE eid='$eid' AND email='$email' " )or die('Error139');
       while($row=mysqli_fetch_array($q) )
       {
@@ -139,21 +153,25 @@
       }
       $w++;
       $s=$s-$wrong;
+	  //updating score in the history table when each question is answered incorrectly
       $q=mysqli_query($con,"UPDATE `history` SET `score`=$s,`level`=$sn,`wrong`=$w, date=NOW() WHERE  email = '$email' AND eid = '$eid'")or die('Error147');
     }
+	
+	//Redirecting to next question if all questions are not completed
     if($sn != $total)
     {
       $sn++;
       header("location:welcome.php?q=quiz&step=2&eid=$eid&n=$sn&t=$total")or die('Error152');
     }
-    else if( $_SESSION['key']!='suryapinky')
+	/*
+    else if( $_SESSION['key']!='admin')
     {
       $q=mysqli_query($con,"SELECT score FROM history WHERE eid='$eid' AND email='$email'" )or die('Error156');
       while($row=mysqli_fetch_array($q) )
       {
         $s=$row['score'];
       }
-      $q=mysqli_query($con,"SELECT * FROM rank WHERE email='$email'" )or die('Error161');
+      /*$q=mysqli_query($con,"SELECT * FROM rank WHERE email='$email'" )or die('Error161');
       $rowcount=mysqli_num_rows($q);
       if($rowcount == 0)
       {
@@ -167,15 +185,17 @@
         }
         $sun=$s+$sun;
         $q=mysqli_query($con,"UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE email= '$email'")or die('Error174');
-      }
-      header("location:welcome.php?q=result&eid=$eid");
-    }
+      }*/
+      //header("location:welcome.php?q=result&eid=$eid");
+    //}
+	//if all questions not completed then show the result
     else
     {
       header("location:welcome.php?q=result&eid=$eid");
     }
   }
 
+  // If the user wants to restart the quiz
   if(@$_GET['q']== 'quizre' && @$_GET['step']== 25 ) 
   {
     $eid=@$_GET['eid'];
@@ -187,13 +207,13 @@
       $s=$row['score'];
     }
     $q=mysqli_query($con,"DELETE FROM `history` WHERE eid='$eid' AND email='$email' " )or die('Error184');
-    $q=mysqli_query($con,"SELECT * FROM rank WHERE email='$email'" )or die('Error161');
+   /* $q=mysqli_query($con,"SELECT * FROM rank WHERE email='$email'" )or die('Error161');
     while($row=mysqli_fetch_array($q) )
     {
       $sun=$row['score'];
     }
     $sun=$sun-$s;
-    $q=mysqli_query($con,"UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE email= '$email'")or die('Error174');
+    $q=mysqli_query($con,"UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE email= '$email'")or die('Error174');*/
     header("location:welcome.php?q=quiz&step=2&eid=$eid&n=1&t=$t");
   }
 ?>

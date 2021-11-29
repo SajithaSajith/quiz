@@ -1,12 +1,17 @@
 <?php
+//admin.php is used for admin login in the back end
+    //Setting up database connection
     include_once 'database.php';
     session_start();
+	
+	//If already logged in all Session variables will be destroyed and will be directed to login again
     if(isset($_SESSION["email"]))
 	{
 		session_destroy();
     }
     
     $ref=@$_GET['q'];
+	//Verifying the email and password of admin. If verified it will be redirected to Dashboard. Other wise login again
     if(isset($_POST['submit']))
 	{	
         $email = $_POST['email'];
@@ -72,10 +77,12 @@
 						<center> <h5 style="font-family: Noto Sans;">Login to </h5><h4 style="font-family: Noto Sans;">Admin Page</h4></center><br>
 							<form method="post" action="admin.php" enctype="multipart/form-data">
 								<div class="form-group">
+								<!-- enter enail id as 'admin@example.com' -->
 									<label>Enter Your Email Id:</label>
 									<input type="email" name="email" class="form-control">
 								</div>
 								<div class="form-group">
+								<!-- enter password as 'admin' -->
 									<label class="fw">Enter Your Password:
 										<a href="javascript:void(0)" class="pull-right">Forgot Password?</a>
 									</label>

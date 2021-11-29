@@ -1,14 +1,17 @@
 <?php
+//dashboard.php is used for admin to manage Quiz topic and add questions in the back end
+	//Setting up database connection
     include_once 'database.php';
     session_start();
+	//If not logged in will be directed to login again
     if(!(isset($_SESSION['email'])))
     {
         header("location:login.php");
     }
     else
     {
-        $name = $_SESSION['name'];
-        $email = $_SESSION['email'];
+        //$name = $_SESSION['name'];
+        //$email = $_SESSION['email'];
         include_once 'database.php';
     }
 	$datavar = '';
@@ -20,7 +23,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard | Online Quiz System</title>
+    <title>Dashboard | Quiz Application</title>
 	<link  rel="stylesheet" href="css/bootstrap.min.css"/>
     <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
     <link rel="stylesheet" href="css/welcome.css">
@@ -35,6 +38,7 @@
 </head>
 
 <body>
+	<!-- Top Navigation Bar Starts-->
     <nav class="navbar navbar-default title1">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -61,10 +65,11 @@
             </div>
         </div>
     </nav>
-
+	<!-- Top Navigation Bar Ends-->
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+				<!-- @$_GET['q'] = 0 then show welcome message to the admin-->
                 <?php if(@$_GET['q']==0)
                 {
                    echo "<h1> WELCOME TO Admin Page!!
@@ -75,48 +80,8 @@
 					
                 }
 
-                /*if(@$_GET['q']== 2) 
-                {
-                    $q=mysqli_query($con,"SELECT * FROM rank  ORDER BY score DESC " )or die('Error223');
-                    echo  '<div class="panel title"><div class="table-responsive">
-                    <table class="table table-striped title1" >
-                    <tr style="color:red"><td><center><b>Rank</b></center></td><td><center><b>Name</b></center></td><td><center><b>Score</b></center></td></tr>';
-                    $c=0;
-                    while($row=mysqli_fetch_array($q) )
-                    {
-                        $e=$row['email'];
-                        $s=$row['score'];
-                        $q12=mysqli_query($con,"SELECT * FROM user WHERE email='$e' " )or die('Error231');
-                        while($row=mysqli_fetch_array($q12) )
-                        {
-                            $name=$row['name'];
-                            $college=$row['college'];
-                        }
-                        $c++;
-                        echo '<tr><td style="color:#99cc32"><center><b>'.$c.'</b></center></td><td><center>'.$e.'</center></td><td><center>'.$s.'</center></td>';
-                    }
-                    echo '</table></div></div>';
-                }*/
                 ?>
-                <?php 
-                   /* if(@$_GET['q']==1) 
-                    {
-                        $result = mysqli_query($con,"SELECT * FROM user") or die('Error');
-                        echo  '<div class="panel"><div class="table-responsive"><table class="table table-striped title1">
-                        <tr><td><center><b>S.N.</b></center></td><td><center><b>Name</b></center></td><td><center><b>College</b></center></td><td><center><b>Email</b></center></td><td><center><b>Action</b></center></td></tr>';
-                        $c=1;
-                        while($row = mysqli_fetch_array($result)) 
-                        {
-                            $name = $row['name'];
-                            $email = $row['email'];
-                            $college = $row['college'];
-                            echo '<tr><td><center>'.$c++.'</center></td><td><center>'.$name.'</center></td><td><center>'.$college.'</center></td><td><center>'.$email.'</center></td><td><center><a title="Delete User" href="update.php?demail='.$email.'"><b><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b></a></center></td></tr>';
-                        }
-                        $c=0;
-                        echo '</table></div></div>';
-                    }*/
-                ?>
-
+                <!-- @$_GET['q'] = 4 and @$_GET['step'] = null then show entry form for Quiz topic add-->
                 <?php
                     if(@$_GET['q']==4 && !(@$_GET['step']) ) 
                     {
@@ -153,13 +118,6 @@
 									
                                 </div>
 
-                                <!--<div class="form-group">
-                                    <label class="col-md-12 control-label" for="wrong"></label>  
-                                    <div class="col-md-12">
-                                        <input id="wrong" name="wrong" placeholder="Enter minus marks on wrong answer without sign" class="form-control input-md" min="0" type="number">
-                                    </div>
-                                </div>-->
-                                
                                 <div class="form-group">
                                     <label class="col-md-12 control-label" for=""></label>
                                     <div class="col-md-12"> 
@@ -172,6 +130,7 @@
                     }
                 ?>
 
+				<!-- @$_GET['q'] = 4 and @$_GET['step'] = 2 then show entry form for Quiz questions with options and answer-->
                 <?php
                     if(@$_GET['q']==4 && (@$_GET['step'])==2 ) 
                     {
@@ -268,7 +227,8 @@
                         </form></validation-observer></div></div>';
                     }
                 ?>
-
+				
+				<!-- @$_GET['q'] = 5 then show list of Quiz topics. You can remove topics here -->
                 <?php 
                     if(@$_GET['q']==5) 
                     {
@@ -292,18 +252,15 @@
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vee-validate@3.3.8/dist/rules.umd.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vee-validate@3.3.8/dist/rules.umd.js"></script>
   <!-- include the Vue.js framework -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
 
   <!-- include the VeeValidate library -->
   <script src="https://cdn.jsdelivr.net/npm/vee-validate@3.3.8/dist/vee-validate.min.js"></script>
 
+<!-- Vue.js validation for the Quiz topic form and questions form -->
 <script>
-	var beginner = 0;
-	var intermediate = 0;
-	var professional = 0;	
-	var frmNums = '';
 	
     Vue.component('validation-observer', VeeValidate.ValidationObserver);
 

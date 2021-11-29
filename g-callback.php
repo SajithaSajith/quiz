@@ -1,4 +1,6 @@
 <?php
+
+	//Google call back function to set $_SESSION['access_token'] with the Token, $_SESSION['email'] with Google Email Id and $_SESSION['givenName'] with First Name in the Google account.
 	require_once "system/config/config.php";
 
 	if (isset($_SESSION['access_token']))
@@ -14,13 +16,10 @@
 	$oAuth = new Google_Service_Oauth2($gClient);
 	$userData = $oAuth->userinfo_v2_me->get();
 
-	$_SESSION['id'] = $userData['id'];
 	$_SESSION['email'] = $userData['email'];
-	$_SESSION['gender'] = $userData['gender'];
-	$_SESSION['picture'] = $userData['picture'];
-	$_SESSION['familyName'] = $userData['familyName'];
 	$_SESSION['givenName'] = $userData['givenName'];
-
+	
+	//Redirecting to welcome.php after setting SESSION variables
 	header('Location: welcome.php?q=1');
 	exit();
 ?>

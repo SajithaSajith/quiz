@@ -1,6 +1,10 @@
 <?php
+//welcome.php is used for front end
+	//Setting up database connection
     include_once 'database.php';
     session_start();
+	
+	//if the user is not logged in redirect to login page else Name and Email id from the google account will be stored into variables
     if (!isset($_SESSION['access_token'])) {
 		header('Location: login.php');
 		exit();
@@ -12,14 +16,13 @@
         include_once 'database.php';
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Welcome | Online Quiz System</title>
+    <title>Welcome | Quiz Application</title>
     <link  rel="stylesheet" href="css/bootstrap.min.css"/>
     <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
     <link rel="stylesheet" href="css/welcome.css">
@@ -28,6 +31,7 @@
     <script src="js/bootstrap.min.js"  type="text/javascript"></script>
 </head>
 <body>
+	<!-- Top Navigation Bar Starts-->
     <nav class="navbar navbar-default title1">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -39,34 +43,30 @@
             </button>
         <a class="navbar-brand" href="#"><b>Quiz Application</b></a>
         </div>
-
+		
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-left">
             <li <?php if(@$_GET['q']==1) echo'class="active"'; ?> ><a href="welcome.php?q=1"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Home<span class="sr-only">(current)</span></a></li>
-            <!--<li <?php if(@$_GET['q']==2) echo'class="active"'; ?>> <a href="welcome.php?q=2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;History</a></li>
-            <li <?php if(@$_GET['q']==3) echo'class="active"'; ?>> <a href="welcome.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Ranking</a></li>-->
-            
+            <li><span><b><br/>  User - <?php echo $name;?><?php echo " ( ".$email." ) ";?></b></span></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
         <li <?php echo''; ?> > <a href="logout.php?q=welcome.php"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Log out</a></li>
         </ul>
-        
-            
-           
-       
         </div>
     </div>
     </nav>
+	<!-- Top Navigation Bar Ends-->
     <br><br>
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+			<!-- @$_GET['q'] = 1 then list the all the topics of quiz with details like Total Questions, Total Marks and Action like Start/Restart(If already took that topic)-->
                 <?php if(@$_GET['q']==1) 
                 {
                     $result = mysqli_query($con,"SELECT * FROM quiz ORDER BY date DESC") or die('Error');
                     echo  '<div class="panel"><div class="table-responsive"><table class="table table-striped title1">
-                    <tr><td><center><b>S.N.</b></center></td><td><center><b>Topic</b></center></td><td><center><b>Total question</b></center></td><td><center><b>Marks</center></b></td><td><center><b>Action</b></center></td></tr>';
+                    <tr><td><center><b>S.N.</b></center></td><td><center><b>Topic</b></center></td><td><center><b>Total question</b></center></td><td><center><b>Total Marks</center></b></td><td><center><b>Action</b></center></td></tr>';
                     $c=1;
                     while($row = mysqli_fetch_array($result)) {
                         $title = $row['title'];
@@ -80,13 +80,14 @@
                     }
                     else
                     {
-                    echo '<tr style="color:#99cc32"><td><center>'.$c++.'</center></td><td><center>'.$title.'&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></center></td><td><center>'.$total.'</center></td><td><center>'.$sahi*$total.'</center></td><td><center><b><a href="update.php?q=quizre&step=25&eid='.$eid.'&n=1&t='.$total.'" class="pull-right btn sub1" style="color:black;margin:0px;background:red"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Restart</b></span></a></b></center></td></tr>';
+                    echo '<tr style="color:#99cc32"><td><center>'.$c++.'</center></td><td><center>'.$title.'&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></center></td><td><center>'.$total.'</center></td><td><center>'.$sahi*$total.'</center></td><td><center><b><a href="update.php?q=quizre&step=25&eid='.$eid.'&n=1&t='.$total.'" class="btn sub1" style="color:black;margin:0px;background:red"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Restart</b></span></a></b></center></td></tr>';
                     }
                     }
                     $c=0;
                     echo '</table></div></div>';
                 }?>
 
+				<!-- @$_GET['q'] = 'quiz' and @$_GET['step'] = 2 then show all the questions of quiz one by one with options and Submit button-->
                 <?php
                     if(@$_GET['q']== 'quiz' && @$_GET['step']== 2) 
                     {
@@ -104,7 +105,7 @@
                         echo '<div class="panel" style="margin:5%">';
                         while($row=mysqli_fetch_array($q) )
                         {
-                            $qns=$row['qns'];
+                            $qns=stripslashes($row['qns']);
                             $qid=$row['qid'];
                             echo '<b>Question &nbsp;'.$sn.'&nbsp;::<br /><br />'.$qns.'</b><br /><br />';
                         }
@@ -114,13 +115,14 @@
 
                         while($row=mysqli_fetch_array($q) )
                         {
-                            $option=$row['option'];
+                            $option=stripslashes($row['option']);
                             $optionid=$row['optionid'];
                             echo'<input required type="radio" name="ans" value="'.$optionid.'">&nbsp;'.$option.'<br /><br />';
                         }
                         echo'<br /><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;Submit</button></form></div>';
                     }
-
+					
+					// @$_GET['q'] = 'result' and @$_GET['eid'] != null then list the the result of quiz will be shown with Score,Right Answers & Wrong Answers -->		
                     if(@$_GET['q']== 'result' && @$_GET['eid']) 
                     {
                         $eid=@$_GET['eid'];
@@ -135,7 +137,7 @@
                             $r=$row['sahi'];
                             $qa=$row['level'];
                             echo '<tr style="color:#66CCFF"><td>Total Questions</td><td>'.$qa.'</td></tr>
-                                <tr style="color:#99cc32"><td>right Answer&nbsp;<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></td><td>'.$r.'</td></tr> 
+                                <tr style="color:#99cc32"><td>Right Answer&nbsp;<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></td><td>'.$r.'</td></tr> 
                                 <tr style="color:red"><td>Wrong Answer&nbsp;<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></td><td>'.$w.'</td></tr>
                                 <tr style="color:#66CCFF"><td>Score&nbsp;<span class="glyphicon glyphicon-star" aria-hidden="true"></span></td><td>'.$s.'</td></tr>';
                         }
@@ -149,53 +151,5 @@
                     }
                 ?>
 
-                <?php
-                    if(@$_GET['q']== 2) 
-                    {
-                        $q=mysqli_query($con,"SELECT * FROM history WHERE email='$email' ORDER BY date DESC " )or die('Error197');
-                        echo  '<div class="panel title">
-                        <table class="table table-striped title1" >
-                        <tr style="color:black;"><td><center><b>S.N.</b></center></td><td><center><b>Quiz</b></center></td><td><center><b>Question Solved</b></center></td><td><center><b>Right</b></center></td><td><center><b>Wrong<b></center></td><td><center><b>Score</b></center></td>';
-                        $c=0;
-                        while($row=mysqli_fetch_array($q) )
-                        {
-                        $eid=$row['eid'];
-                        $s=$row['score'];
-                        $w=$row['wrong'];
-                        $r=$row['sahi'];
-                        $qa=$row['level'];
-                        $q23=mysqli_query($con,"SELECT title FROM quiz WHERE  eid='$eid' " )or die('Error208');
-
-                        while($row=mysqli_fetch_array($q23) )
-                        {  $title=$row['title'];  }
-                        $c++;
-                        echo '<tr><td><center>'.$c.'</center></td><td><center>'.$title.'</center></td><td><center>'.$qa.'</center></td><td><center>'.$r.'</center></td><td><center>'.$w.'</center></td><td><center>'.$s.'</center></td></tr>';
-                        }
-                        echo'</table></div>';
-                    }
-
-                    if(@$_GET['q']== 3) 
-                    {
-                        $q=mysqli_query($con,"SELECT * FROM rank ORDER BY score DESC " )or die('Error223');
-                        echo  '<div class="panel title"><div class="table-responsive">
-                        <table class="table table-striped title1" >
-                        <tr style="color:red"><td><center><b>Rank</b></center></td><td><center><b>Name</b></center></td><td><center><b>Email</b></center></td><td><center><b>Score</b></center></td></tr>';
-                        $c=0;
-
-                        while($row=mysqli_fetch_array($q) )
-                        {
-                            $e=$row['email'];
-                            $s=$row['score'];
-                            $q12=mysqli_query($con,"SELECT * FROM user WHERE email='$e' " )or die('Error231');
-                            while($row=mysqli_fetch_array($q12) )
-                            {
-                                $name=$row['name'];
-                            }
-                            $c++;
-                            echo '<tr><td style="color:black"><center><b>'.$c.'</b></center></td><td><center>'.$name.'</center></td><td><center>'.$e.'</center></td><td><center>'.$s.'</center></td></tr>';
-                        }
-                        echo '</table></div></div>';
-                    }
-                ?>
 </body>
 </html>
