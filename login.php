@@ -2,7 +2,7 @@
     require_once "system/config/config.php";
 
 	if (isset($_SESSION['access_token'])) {
-		header('Location: index.php');
+		header('Location: welcome.php?q=1');
 		exit();
 	}
 

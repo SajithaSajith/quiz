@@ -37,15 +37,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-        <a class="navbar-brand" href="#"><b>Online Quiz System</b></a>
+        <a class="navbar-brand" href="#"><b>Quiz Application</b></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-left">
             <li <?php if(@$_GET['q']==1) echo'class="active"'; ?> ><a href="welcome.php?q=1"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Home<span class="sr-only">(current)</span></a></li>
-            <li <?php if(@$_GET['q']==2) echo'class="active"'; ?>> <a href="welcome.php?q=2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;History</a></li>
-            <li <?php if(@$_GET['q']==3) echo'class="active"'; ?>> <a href="welcome.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Ranking</a></li>
+            <!--<li <?php if(@$_GET['q']==2) echo'class="active"'; ?>> <a href="welcome.php?q=2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;History</a></li>
+            <li <?php if(@$_GET['q']==3) echo'class="active"'; ?>> <a href="welcome.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Ranking</a></li>-->
             
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -93,7 +93,14 @@
                         $eid=@$_GET['eid'];
                         $sn=@$_GET['n'];
                         $total=@$_GET['t'];
-                        $q=mysqli_query($con,"SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' " );
+						$q=mysqli_query($con,"SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' " );
+						if($sn <=4)
+							echo '<h3 style="color:white">Beginner Question - '.$sn.' </h3>';
+						else if($sn <= 7 && $sn > 4)
+							echo '<h3 style="color:white">Intermediate Questions - '.$sn.' </h3>';
+						else if($sn <= 10 && $sn > 7)
+							echo '<h3 style="color:white">Professional Questions - '.$sn.' </h3>';
+						
                         echo '<div class="panel" style="margin:5%">';
                         while($row=mysqli_fetch_array($q) )
                         {
@@ -109,7 +116,7 @@
                         {
                             $option=$row['option'];
                             $optionid=$row['optionid'];
-                            echo'<input type="radio" name="ans" value="'.$optionid.'">&nbsp;'.$option.'<br /><br />';
+                            echo'<input required type="radio" name="ans" value="'.$optionid.'">&nbsp;'.$option.'<br /><br />';
                         }
                         echo'<br /><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;Submit</button></form></div>';
                     }
