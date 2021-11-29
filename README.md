@@ -31,7 +31,13 @@ After Starting Apache and MySQL in XAMPP/WAMP, follow the following steps.
 
 8th Step: Click on go.
 
-After Creating Database,
+You can notice 'admin','answer', 'history', 'options', 'questions', 'quiz' tables in the database.
+'admin' - table used for admin login details
+'quiz' - table used for saving the quiz topics with details
+'questions' - table used for saving questions of all topics with related details
+'options' - table used for saving the options for questions
+'answer' - table used for saving the answer of the question
+'history' - table used for calculating the score of the quiz for a perticular user
 
 9th Step: Open a browser and go to URL “http://localhost/quiz/”
 
