@@ -8,9 +8,9 @@ Once the user chooses a subjects to take a quiz, he would get 10 questions, 4 of
 One question is visible each time and each question would have 4 Multiple choice answers and only one answer would be right. There would not be any time limit. Next question is visible after the first question is answered.
 After the quiz is complete the score will be displayed to the user.
 # Admin Side
-The admin can view and manage the users, their rankings, and manage the quiz topics and questions.
+The admin can manage the quiz topics and add questions.
 # About System
-This Quiz Application is in PHP, CSS, JavaScript, Bootstrap and Vue JS. Talking about the features of the Quiz Application, it just contains both the admin section and the user section. The user can log in using Google Account to take the quiz, while the admin can view all users, their rankings and manage topics and questions. The design of this project is pretty simple so that the user won’t find any difficulties while working on it.
+This Quiz Application is in PHP, CSS, JavaScript, Bootstrap and Vue JS. Talking about the features of the Quiz Application, it just contains both the admin section and the user section. The user can log in using Google Account to take the quiz, while the admin can manage topics and questions. The design of this project is pretty simple so that the user won’t find any difficulties while working on it.
 # How To Run The Project?
 To run this project, you must have installed a virtual server eg. XAMPP on your PC (for Windows).
 After Starting Apache and MySQL in XAMPP/WAMP, follow the following steps.
